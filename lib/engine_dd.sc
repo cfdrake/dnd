@@ -14,7 +14,8 @@ Engine_DD : CroneEngine {
 	    var osc3 = SinOscFB.ar(osc3Freq + (slopOsc*oscSlop), osc3Fb) * Lag.kr(osc3Amp, 0.1);
 	    var noise = PinkNoise.ar() * noiseAmp;
 	    var filter = MoogFF.ar(noise, filterFreq, filterRes);
-            var final = Limiter.ar(Mix.ar([osc1, osc2, osc3, filter]));
+	    var bitcrush = Decimator.ar(filter, 22050, 8);
+            var final = Limiter.ar(Mix.ar([osc1, osc2, osc3, bitcrush]));
             Out.ar(out, final.dup);
         }.play(args: [\out, context.out_b,
 	              \osc1Freq, 55,
@@ -24,10 +25,10 @@ Engine_DD : CroneEngine {
                       \osc1Fb, 0,
                       \osc2Fb, 0,
                       \osc3Fb, 0,
-		      \osc1Amp, 0.2,
-		      \osc2Amp, 0.2,
-		      \osc3Amp, 0.2,
-		      \noiseAmp, 0.2,
+		      \osc1Amp, 0.0,
+		      \osc2Amp, 0.0,
+		      \osc3Amp, 0.0,
+		      \noiseAmp, 0.0,
 		      \filterFreq, 65,
 		      \filterRes, 1],
              target: context.xg

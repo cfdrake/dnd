@@ -1,5 +1,8 @@
--- dd
--- drama & drone
+-- ~~ dd ~~
+-- drama & drones
+-- 3xsinfb & noise
+-- thanks to: @bjc01
+-- port by: @cfd90
 
 local ez = include "lib/ezscript"
 
