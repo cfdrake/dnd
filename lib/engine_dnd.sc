@@ -1,4 +1,4 @@
-Engine_DD : CroneEngine {
+Engine_DND : CroneEngine {
     var <synth;
 
     *new { arg context, doneCallback;

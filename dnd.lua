@@ -1,12 +1,12 @@
--- ~~ dd ~~
--- drama & drones
+-- ~~ dnd ~~
+-- drone & drama port
 -- 3xsinfb & noise
 -- thanks to: @bjc01
 -- port by: @cfd90
 
 local ez = include "lib/ezscript"
 
-engine.name = "DD"
+engine.name = "DND"
 
 ez.pages = {
   { name = "osc 1", e1 = "osc1Freq",   e2 = "osc1Fb",    e3 = "osc1Amp" },
