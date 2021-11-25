@@ -21,6 +21,25 @@ ez.show_page_counts = true
 -- string to display for unused encoder
 ez.unused_encoder_str = "-"
 
+-- whether or not to refresh UI automatically
+ez.auto_refresh = false
+
+ez.init = function(pages)
+  -- Configure pages
+  ez.pages = pages
+  
+  -- Setup auto refresh if needed.
+  if ez.auto_refresh then
+    ez.ui_metro = metro.init()
+    ez.ui_metro.time = 1/15
+    ez.ui_metro.event = function()
+      redraw()
+    end
+  
+    ez.ui_metro:start()
+  end
+end
+
 local function draw_encoder_param(p)
   if p ~= nil then
     screen.level(15)
