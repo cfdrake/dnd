@@ -4,6 +4,8 @@
 -- tiny lib for quickly building a text-based norns ui
 --
 
+local key1_held = false
+
 local ez = {}
 
 -- current page
@@ -84,18 +86,25 @@ end
 
 function enc(n, d)
   local p = ez.pages[ez.page]
+  local amount
+  
+  if key1_held then
+    amount = d / 10
+  else
+    amount = d
+  end
   
   if n == 1 then
     if p.e1 ~= nil then
-      params:delta(p.e1, d)
+      params:delta(p.e1, amount)
     end
   elseif n == 2 then
     if p.e2 ~= nil then
-      params:delta(p.e2, d)
+      params:delta(p.e2, amount)
     end
   elseif n == 3 then
     if p.e3 ~= nil then
-      params:delta(p.e3, d)
+      params:delta(p.e3, amount)
     end
   end
   
@@ -103,6 +112,12 @@ function enc(n, d)
 end
 
 function key(n, z)
+  if n == 1 and z == 1 then
+    key1_held = true
+  elseif n == 1 and z == 0 then
+    key1_held = false
+  end
+  
   if z == 1 then
     if n == 2 then 
       ez.page = util.clamp(ez.page - 1, 1, #ez.pages)
