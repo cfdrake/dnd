@@ -27,7 +27,14 @@ function init()
   params:set_action("osc1Amp", function(x) engine.osc1Amp(x) end)
   
   params:add_control("osc1Freq", "osc 1 freq", controlspec.new(1, 2000, 'exp', 0.01, 55, 'hz', 1/500))
-  params:set_action("osc1Freq", function(x) engine.osc1Freq(x) end)
+  params:set_action("osc1Freq", function(x)
+    engine.osc1Freq(x + params:get("osc1FreqFine"))
+  end)
+  
+  params:add_control("osc1FreqFine", "osc 1 freq (fine)", controlspec.new(-10, 10, 'lin', 0.01, 0, 'hz', 1/500))
+  params:set_action("osc1FreqFine", function(x)
+    engine.osc1Freq(x + params:get("osc1Freq"))
+  end)
   
   params:add_control("osc1Fb", "osc 1 fb", controlspec.new(0.0, 4, 'lin', 0.01, 0, '', 1/500))
   params:set_action("osc1Fb", function(x) engine.osc1Fb(x) end)
@@ -38,7 +45,14 @@ function init()
   params:set_action("osc2Amp", function(x) engine.osc2Amp(x) end)
   
   params:add_control("osc2Freq", "osc 2 freq", controlspec.new(1, 2000, 'exp', 0.01, 110, 'hz', 1/500))
-  params:set_action("osc2Freq", function(x) engine.osc2Freq(x) end)
+  params:set_action("osc2Freq", function(x)
+    engine.osc2Freq(x + params:get("osc2FreqFine"))
+  end)
+  
+  params:add_control("osc2FreqFine", "osc 2 freq (fine)", controlspec.new(-10, 10, 'lin', 0.01, 0, 'hz', 1/500))
+  params:set_action("osc2FreqFine", function(x)
+    engine.osc2Freq(x + params:get("osc2Freq"))
+  end)
   
   params:add_control("osc2Fb", "osc 2 fb", controlspec.new(0.0, 4, 'lin', 0.01, 0, '', 1/500))
   params:set_action("osc2Fb", function(x) engine.osc2Fb(x) end)
@@ -49,7 +63,14 @@ function init()
   params:set_action("osc3Amp", function(x) engine.osc3Amp(x) end)
   
   params:add_control("osc3Freq", "osc 3 freq", controlspec.new(1, 2000, 'exp', 0.01, 220, 'hz', 1/500))
-  params:set_action("osc3Freq", function(x) engine.osc3Freq(x) end)
+  params:set_action("osc3Freq", function(x)
+    engine.osc3Freq(x + params:get("osc3FreqFine"))
+  end)
+  
+  params:add_control("osc3FreqFine", "osc 3 freq (fine)", controlspec.new(-10, 10, 'lin', 0.01, 0, 'hz', 1/500))
+  params:set_action("osc3FreqFine", function(x)
+    engine.osc3Freq(x + params:get("osc3Freq"))
+  end)
   
   params:add_control("osc3Fb", "osc 3 fb", controlspec.new(0.0, 4, 'lin', 0.01, 0, '', 1/500))
   params:set_action("osc3Fb", function(x) engine.osc3Fb(x) end)
@@ -96,18 +117,24 @@ function init()
         if cc == 1 then
           params:set("osc1Freq", pct * 2000)
         elseif cc == 2 then
+          params:set("osc1FreqFine", (pct * 20) - 10)
+        elseif cc == 3 then
           params:set("osc1Fb", pct * 4)
         elseif cc == 4 then
           params:set("osc1Amp", pct * 1)
         elseif cc == 5 then
           params:set("osc2Freq", pct * 2000)
         elseif cc == 6 then
+          params:set("osc2FreqFine", (pct * 20) - 10)
+        elseif cc == 7 then
           params:set("osc2Fb", pct * 4)
         elseif cc == 8 then
           params:set("osc2Amp", pct * 1)
         elseif cc == 9 then
           params:set("osc3Freq", pct * 2000)
         elseif cc == 10 then
+          params:set("osc3FreqFine", (pct * 20) - 10)
+        elseif cc == 11 then
           params:set("osc3Fb", pct * 4)
         elseif cc == 12 then
           params:set("osc3Amp", pct * 1)
