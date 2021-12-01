@@ -52,7 +52,7 @@ function init()
     
     local Y
     
-    if y == 8 then
+    if y == 8 and x >= 4 then
       Y = 0
     else
       Y = (8 - y) + 1
