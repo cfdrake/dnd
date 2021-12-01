@@ -7,15 +7,17 @@ Engine_DND : CroneEngine {
 
     alloc {
         synth = {
-            arg out, osc1Freq, osc2Freq, osc3Freq, oscSlop, osc1Amp, osc2Amp, osc3Amp, osc1Fb, osc2Fb, osc3Fb, noiseAmp, filterFreq, filterRes;
+            arg out, osc1Freq, osc2Freq, osc3Freq, oscSlop, osc1Amp, osc2Amp, osc3Amp, osc1Fb, osc2Fb, osc3Fb, oscMod, noiseAmp, filterFreq, filterRes;
             var slopOsc = LFNoise0.ar(osc1Freq);
-            var osc1 = SinOscFB.ar(osc1Freq + (slopOsc*oscSlop), osc1Fb) * Lag.kr(osc1Amp, 0.1);
-	    var osc2 = SinOscFB.ar(osc2Freq + (slopOsc*oscSlop), osc2Fb) * Lag.kr(osc2Amp, 0.1);
-	    var osc3 = SinOscFB.ar(osc3Freq + (slopOsc*oscSlop), osc3Fb) * Lag.kr(osc3Amp, 0.1);
+            var oscFbLoop = LocalIn.ar(1);
+            var osc1 = SinOscFB.ar(osc1Freq + (slopOsc*oscSlop) + (oscFbLoop*oscMod), osc1Fb) * Lag.kr(osc1Amp, 0.1);
+	    var osc2 = SinOscFB.ar(osc2Freq + (slopOsc*oscSlop) + (osc1*oscMod), osc2Fb) * Lag.kr(osc2Amp, 0.1);
+	    var osc3 = SinOscFB.ar(osc3Freq + (slopOsc*oscSlop) + (osc2*oscMod), osc3Fb) * Lag.kr(osc3Amp, 0.1);
 	    var noise = PinkNoise.ar() * noiseAmp;
 	    var filter = MoogFF.ar(noise, filterFreq, filterRes);
 	    var bitcrush = Decimator.ar(filter, 22050, 8);
             var final = Limiter.ar(Mix.ar([osc1, osc2, osc3, bitcrush]));
+            LocalOut.ar(osc3);
             Out.ar(out, final.dup);
         }.play(args: [\out, context.out_b,
 	              \osc1Freq, 55,
@@ -28,6 +30,7 @@ Engine_DND : CroneEngine {
 		      \osc1Amp, 0.0,
 		      \osc2Amp, 0.0,
 		      \osc3Amp, 0.0,
+                      \oscMod, 0.0,
 		      \noiseAmp, 0.0,
 		      \filterFreq, 65,
 		      \filterRes, 1],
@@ -73,6 +76,10 @@ Engine_DND : CroneEngine {
         this.addCommand("osc3Amp", "f", {
             arg msg;
             synth.set(\osc3Amp, msg[1]);
+        });
+        this.addCommand("oscMod", "f", {
+            arg msg;
+            synth.set(\oscMod, msg[1]);
         });
         this.addCommand("noiseAmp", "f", {
             arg msg;

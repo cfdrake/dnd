@@ -1,8 +1,9 @@
--- ~~ all drama ~~
+-- ~~ dnd/alldrama ~~
 -- a drum machine for nerds
 -- maiden: use p(), f(), r(), s()
+--
 -- by: @cfd90
--- based on: drone and drama
+-- thanks to: barry cullen
 
 local dnd = include "lib/engine_dnd"
 

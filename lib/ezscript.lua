@@ -20,6 +20,9 @@ ez.show_values = true
 -- whether or not to show page counts
 ez.show_page_counts = true
 
+-- whether or not to show page title
+ez.show_page_title = true
+
 -- string to display for unused encoder
 ez.unused_encoder_str = "-"
 
@@ -63,9 +66,11 @@ function redraw()
   screen.clear()
   screen.aa(0)
   
-  screen.level(15)
-  screen.move(0, 10)
-  screen.text(p.name)
+  if ez.show_page_title then
+    screen.level(15)
+    screen.move(0, 10)
+    screen.text(p.name)
+  end
   
   if ez.show_page_counts then
     screen.move(124, 10)

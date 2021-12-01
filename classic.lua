@@ -1,8 +1,9 @@
--- ~~ dnd ~~
+-- ~~ dnd/classic ~~
 -- drone & drama port
 -- 3xsinfb & noise
--- thanks to: @bjc01
--- port by: @cfd90
+--
+-- by: @cfd90
+-- thanks to: barry cullen
 
 local ez = include "lib/ezscript"
 local dnd = include "lib/engine_dnd"
@@ -17,7 +18,7 @@ function init()
     { name = "osc 1", e1 = "osc1Freq",   e2 = "osc1Fb",    e3 = "osc1Amp" },
     { name = "osc 2", e1 = "osc2Freq",   e2 = "osc2Fb",    e3 = "osc2Amp" },
     { name = "osc 3", e1 = "osc3Freq",   e2 = "osc3Fb",    e3 = "osc3Amp" },
-    { name = "osc *", e1 = "oscSlop",    e2 = nil,         e3 = nil },
+    { name = "osc *", e1 = "oscSlop",    e2 = "oscMod",    e3 = nil },
     { name = "noise", e1 = "filterFreq", e2 = "filterRes", e3 = "noiseAmp"}
   })
 
@@ -74,10 +75,62 @@ function init()
           params:set("filterFreq", pct * 10000)
         elseif cc == 14 then
           params:set("filterRes", pct * 3.9)
+        elseif cc == 15 then
+          params:set("oscMod", pct * 1000)
         elseif cc == 16 then
           params:set("noiseAmp", pct * 1)
         end
       end
     end
+  end
+  
+  -- Setup grid.
+  g = grid.connect()
+  
+  g:all(0)
+  
+  for x=1,8 do
+    g:led(x, 8, 15)
+  end
+  
+  g:refresh()
+  
+  g.key = function(x, y, z)
+    if z == 0 then
+      return
+    end
+    
+    local Y
+    
+    if y == 8 then
+      Y = 0
+    else
+      Y = (8 - y) + 1
+    end
+    
+    if x == 1 then
+      params:set("osc1Freq", Y * 55)
+    elseif x == 2 then
+      params:set("osc2Freq", Y * 55)
+    elseif x == 3 then
+      params:set("osc3Freq", Y * 55)
+    elseif x == 4 then
+      params:set("filterFreq", Y * 440)
+    elseif x == 5 then
+      params:set("osc1Amp", Y / 16.0)
+    elseif x == 6 then
+      params:set("osc2Amp", Y / 16.0)
+    elseif x == 7 then
+      params:set("osc3Amp", Y / 16.0)
+    elseif x == 8 then
+      params:set("noiseAmp", Y / 16.0)
+    end
+    
+    for _y=1,8 do
+      g:led(x, _y, 0)
+    end
+    
+    g:led(x, y, 15)
+    g:refresh()
   end
 end

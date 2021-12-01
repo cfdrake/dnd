@@ -65,6 +65,9 @@ dnd.add_params = function()
   params:add_control("oscSlop", "osc * slop", controlspec.new(0, 100, 'lin', 0.01, 0, '', 1/500))
   params:set_action("oscSlop", function(x) engine.oscSlop(x) end)
   
+  params:add_control("oscMod", "osc * mod", controlspec.new(0, 1000, 'lin', 0.01, 0, '', 1/500))
+  params:set_action("oscMod", function(x) engine.oscMod(x) end)
+  
   params:add_separator("noise")
 
   params:add_control("noiseAmp", "noise amp", controlspec.new(0.0, 1, 'lin', 0.01, 0.00, '', 1/500))
