@@ -1,6 +1,6 @@
 -- ~~ dnd/harmonic ~~
--- connect a grid
---
+-- harmonic controller...
+-- connect a grid...
 -- 1st four cols: freqs
 -- 2nd four cols: amps
 --
