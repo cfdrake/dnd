@@ -34,6 +34,18 @@ function init()
   end)
   params:hide("oscFbAll")
   
+  params:add_separator()
+  
+  params:add_control("pitchSlew", "pitch slew", controlspec.new(0, 5, 'lin', 0.01, 0, '', 1/500))
+  params:set_action("pitchSlew", function(x)
+    engine.pitchSlew(x)
+  end)
+  
+  params:add_control("ampSlew", "amp slew", controlspec.new(0, 5, 'lin', 0.01, 0, '', 1/500))
+  params:set_action("ampSlew", function(x)
+    engine.ampSlew(x)
+  end)
+  
   -- Setup grid.
   g = grid.connect()
   

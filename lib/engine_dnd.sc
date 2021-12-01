@@ -7,14 +7,14 @@ Engine_DND : CroneEngine {
 
     alloc {
         synth = {
-            arg out, osc1Freq, osc2Freq, osc3Freq, oscSlop, osc1Amp, osc2Amp, osc3Amp, osc1Fb, osc2Fb, osc3Fb, oscMod, noiseAmp, filterFreq, filterRes;
+            arg out, osc1Freq, osc2Freq, osc3Freq, oscSlop, osc1Amp, osc2Amp, osc3Amp, osc1Fb, osc2Fb, osc3Fb, oscMod, noiseAmp, filterFreq, filterRes, ampSlew, pitchSlew;
             var slopOsc = LFNoise0.ar(osc1Freq);
             var oscFbLoop = LocalIn.ar(1);
-            var osc1 = SinOscFB.ar(osc1Freq + (slopOsc*oscSlop) + (oscFbLoop*oscMod), osc1Fb) * Lag.kr(osc1Amp, 0.1);
-	    var osc2 = SinOscFB.ar(osc2Freq + (slopOsc*oscSlop) + (osc1*oscMod), osc2Fb) * Lag.kr(osc2Amp, 0.1);
-	    var osc3 = SinOscFB.ar(osc3Freq + (slopOsc*oscSlop) + (osc2*oscMod), osc3Fb) * Lag.kr(osc3Amp, 0.1);
-	    var noise = PinkNoise.ar() * noiseAmp;
-	    var filter = MoogFF.ar(noise, filterFreq, filterRes);
+            var osc1 = SinOscFB.ar(Lag.kr(osc1Freq, pitchSlew) + (slopOsc*oscSlop) + (oscFbLoop*oscMod), osc1Fb) * Lag.kr(osc1Amp, ampSlew);
+	    var osc2 = SinOscFB.ar(Lag.kr(osc2Freq, pitchSlew) + (slopOsc*oscSlop) + (osc1*oscMod), osc2Fb) * Lag.kr(osc2Amp, ampSlew);
+	    var osc3 = SinOscFB.ar(Lag.kr(osc3Freq, pitchSlew) + (slopOsc*oscSlop) + (osc2*oscMod), osc3Fb) * Lag.kr(osc3Amp, ampSlew);
+	    var noise = PinkNoise.ar() * Lag.kr(noiseAmp, ampSlew);
+	    var filter = MoogFF.ar(noise, Lag.kr(filterFreq, pitchSlew), filterRes);
 	    var bitcrush = Decimator.ar(filter, 22050, 8);
             var final = Limiter.ar(Mix.ar([osc1, osc2, osc3, bitcrush]));
             LocalOut.ar(osc3);
@@ -33,7 +33,9 @@ Engine_DND : CroneEngine {
                       \oscMod, 0.0,
 		      \noiseAmp, 0.0,
 		      \filterFreq, 65,
-		      \filterRes, 1],
+		      \filterRes, 1,
+		      \pitchSlew, 0.0,
+		      \ampSlew, 0.1],
              target: context.xg
 	);
 
@@ -92,6 +94,14 @@ Engine_DND : CroneEngine {
         this.addCommand("filterRes", "f", {
             arg msg;
             synth.set(\filterRes, msg[1]);
+        });
+        this.addCommand("ampSlew", "f", {
+            arg msg;
+            synth.set(\ampSlew, msg[1]);
+        });
+        this.addCommand("pitchSlew", "f", {
+            arg msg;
+            synth.set(\pitchSlew, msg[1]);
         });
     }
 
